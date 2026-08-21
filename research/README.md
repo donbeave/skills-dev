@@ -10,10 +10,12 @@ This directory holds the research product and the notes it was built from.
 
 | File | Role |
 | --- | --- |
+| `GUIDELINE.md` | Short operator process for predictable skills |
+| `SPAWN-PROMPT.md` | Prompt to spawn a follow-on literature agent (no local evals) |
 | `REPORT.md` | Topics 1–33 + Parts I–VIII + closing architecture |
 | `CITATIONS.md` | Numbered bibliography |
-| `EVIDENCE-MATRIX.md` | Standalone matrix (also in Part II of the report) |
-| `EXPERIMENTS.md` | Experiments A–H, fully specified |
+| `EVIDENCE-MATRIX.md` | Technique × evidence × measured effect |
+| `EXPERIMENTS.md` | Experiments A–H, designed not executed |
 | `coverage.md` | Topic coverage checklist |
 | `sources/` | Per-cluster notes with extracted measurements |
 
