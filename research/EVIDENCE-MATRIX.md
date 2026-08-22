@@ -34,5 +34,8 @@ No numeric “measured effect” without a source. Skill applicability is often 
 | Decision tables vs “appropriate” | No direct skill RCT | Analogues: Zhao biases [4]; τ-bench 25% wrong-decision; FC enums | Medium | Default to explicit conditions. **Experiment C**. |
 | Duplicate critical rules | No quantitative LLM duplication study | Adjacent: Sclar sensitivity; maintenance cost; contradiction risk | Low | One home per fact (skill-design principle). Repeat only a **short invariant block** at end if LITM is a risk. |
 | Weaker models + more explicit skills | τ-bench policy ablation [14]; IFEval gap [9] | gpt-3.5 barely uses airline policy (−1.2 pp); IFEval GPT-4 **76.9** vs PaLM 2 S **43.1** | Medium | Explicit skills **help** models that can follow them; they do **not** magically equalize capability. Test cheap models. |
+| Freeze option/method order or use enums | Pezeshkpour [52]; Zheng [53] | MCQ oracle-reorder gap **13–75%**; judge swap consistency Claude **23.8%**, GPT-4 **65%** | High for choice tasks | Do not leave “pick an option” unconstrained. Schema enums; freeze listed order. |
+| Cap simultaneous markdown guardrails | Mu RealGuardrails [54] | Pass → **~0** as system guardrails go **1→20**; GPT Store avg **5.1** rules | High for system prompts | Split or move rules to code. Do not grow SKILL.md as a rule pile. |
+| System vs user channel | Wallace [20]; Mu [54] | +63% extraction robustness from hierarchy training; S-IFEval user→system transfer incomplete | High for privilege; not 100% | Highest-privilege channel **plus** checker. Channel ≠ enforcement. |
 
 Weights in Part VII of the report are **heuristics requiring calibration**, not fitted coefficients.

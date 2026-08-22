@@ -64,3 +64,8 @@ Numbered bibliography for [`REPORT.md`](REPORT.md). Measured results live in `so
 ## Statistics (methods)
 
 51. Clopper-Pearson / Wilson binomial intervals; “rule of three” (n failures=0 ⇒ ~3/n upper 95% on p_fail).
+52. Pezeshkpour & Hruschka (2024). *Large Language Models Sensitivity to The Order of Options in Multiple-Choice Questions.* NAACL Findings. https://arxiv.org/abs/2308.11483 — oracle reorder gap **~13–75%**; GPT-4 still ~13% at >90% acc; few-shot does not close.
+53. Zheng et al. (2023). *Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena.* NeurIPS. https://arxiv.org/abs/2306.05685 — swap consistency Claude-v1 **23.8%**, GPT-3.5 **46.2%**, GPT-4 **65.0%** (30% first-bias).
+54. Mu et al. (2025). *A Closer Look at System Prompt Robustness.* https://arxiv.org/abs/2502.12197 — pass→0 as system guardrails 1→20; GPT Store prompts avg **5.1** guardrails; S-IFEval channel transfer is incomplete.
+55. Wang et al. (2023). *Large Language Models are not Fair Evaluators.* https://arxiv.org/abs/2305.17926 — order of candidate answers biases LLM judges (adjacent to [53]).
+56. Li et al. (2024). *Measuring and Controlling Instruction (In)Stability in Language Model Dialogs.* Persona/instruction drift over turns.

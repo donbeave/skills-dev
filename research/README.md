@@ -31,3 +31,4 @@ This directory holds the research product and the notes it was built from.
 | `sources/06-self-correction-planning.md` | Self-correct, CoT, self-consistency, planning |
 | `sources/07-vendor-skill-systems.md` | Anthropic Skills, OpenAI, Cursor, Copilot, OpenHands |
 | `sources/08-evals-mutation-stats.md` | pass^k, sample size, metamorphic testing |
+| `sources/09-system-order-position.md` | system vs user, MCQ option order, judge position |

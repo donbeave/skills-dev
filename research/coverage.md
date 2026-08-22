@@ -49,4 +49,8 @@ Canonical report: `research/REPORT.md`
 | VII 0–100 heuristic weights marked | yes |
 | VIII create/update/refactor | yes |
 
+| 4 extra | Axis table: wording, format, whitespace, example order, labels, option order, pairwise position, context position, prompt length/guardrail count, distractors, negation, conflicts, duplication, constraint placement, example count, system vs user | yes, §4 table |
+| Appendix | Ten-question bar on top-10 principles | yes |
+
 Local model evals: **none** (operator constraint).
+Structural check: `python3 scripts/verify_report.py` (not an LM eval).

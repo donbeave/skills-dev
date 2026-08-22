@@ -131,14 +131,33 @@ Where the literature has no SKILL.md RCT, we **design** Experiments A–H rather
 
 # 4. Prompt sensitivity and behavioral variance
 
-**PROVEN** (strong empirical):
+Named axes from the research brief, with **measured** sources (not lore):
 
-- **Format** (Sclar [2]): up to **76** points (LLaMA-2-13B), **~10** average; persists with scale, more shots, instruction tuning; weak cross-model correlation; GPT-3.5 median spread **6.4**, max **56**.
-- **Example order** (Lu [3]): **~50% ↔ >85%**; permutation **not** transferable.
-- **Label/recency/majority bias** (Zhao [4]): calibration **+30.0 pp** and **lower variance**.
-- **Adversarial/word mutations** (PromptBench [7]): **33–39%** average drop (word-level).
-- **2026 surface perturbations** (Brittlebench [43]): up to **~12%**; **63%** of comparisons change model **rank**; up to **half** of variance from surface form.
-- **Irrelevant context** (Shi [8]): **≤18%** consistent across distractor types.
+| Axis | Source | Measured effect |
+| --- | --- | --- |
+| Wording / word substitution | PromptBench [7] | Word-level PDR **~33–39%** avg; character **~20%**; sentence **~12%** |
+| Formatting / separators / whitespace / wrappers | Sclar FormatSpread [2] | Up to **76** pts (LLaMA-2-13B); **~10** avg; GPT-3.5 median **6.4**, max **56**. Survives scale, more shots, instruction tuning. Format ranking **weakly correlates across models**. |
+| Example / demonstration **order** | Lu [3] | Same 4-shot: **~50% (chance) ↔ >85%**. Order **not** transferable (88.7%→51.6% across GPT-2 sizes). |
+| Label names / majority / recency / common-token | Zhao [4] | Calibration **+30.0 pp**; reduces variance. |
+| Option / choice **order** | Pezeshkpour & Hruschka [52] | Oracle reorder gap **~13–75%** (GPT-4 / InstructGPT, 5 MCQ sets). GPT-4 still **~13%** gap at **>90%** accuracy. Few-shot **does not** close the gap. Calibration/majority over 10 shuffles up to **+8 pp**. |
+| Pairwise **position** (A vs B) | Zheng et al. MT-Bench [53] | Swap consistency: Claude-v1 **23.8%** (75% first-bias); GPT-3.5 **46.2%**; GPT-4 **65.0%** (30% first-bias). GPT-4 few-shot → **77.5%**. |
+| Context **position** of gold info | Liu [1] | 20-doc GPT-3.5: **75.8%** first, **53.8%** mid (**below** 56.1% closed-book). |
+| Prompt **length** / many simultaneous rules | Mu et al. RealGuardrails [54] | Monkey Island: pass rate → **~0** as system guardrails go **1→20**. Real GPT Store prompts average **5.1** guardrails. |
+| Irrelevant context | Shi [8] | **≤18%** of originally solvable items stay consistent across all distractor types; macro **<30%**. |
+| Surface perturbations on 2026 models | Brittlebench [43] | Up to **~12%** drop; **63%** of model **rankings** flip; up to **half** of variance from surface form. |
+| Negative vs positive wording | Truong [19]; 2026 negation [47] | Llama-3.1 **50.5%** neg vs **95.2%** pos. See §9. |
+| Conflicting instructions (system vs user vs tool) | Wallace [20]; Mu [54] | Hierarchy training **+63%** extraction robustness, **+30%** held-out jailbreak. Still fails under many guardrails / distractors. See below. |
+| Duplicated instructions | no clean RCT | See §15. Adjacent: Sclar (paraphrase = format change); maintenance cost. |
+| Placement of constraints | Liu [1]; OpenAI [37] | Binding rules at **edges**; **output** constraints as grammar, not mid-prose. |
+| Number / diversity of examples | Lu [3]; Min [5]; Sclar [2] | 4-shot already saturates some classif. **and** stays order-sensitive; random labels **0–5%** drop (format matters more than gold labels on classif.). More shots **do not** kill FormatSpread. Exp D. |
+| System vs user channel | Wallace [20]; Mu [54] | System is a **learned** privilege, not a hard VM. S-IFEval: following a constraint in **user** does **not** always transfer to the same constraint in **system**. |
+
+**System vs user (skill-relevant).** Skills are usually injected as **user-readable files** after metadata sat in the **system** list [38]. Two facts:
+
+1. **Privilege is trained, leaky.** Wallace [20] **PROVEN** that teaching system>user>tool raises robustness, not to 100%. Mu [54] **PROVEN** that stacking more system guardrails drives pass rate to zero even **without** adversarial user text. Average real GPT-store prompt already has **5.1** guardrails.
+2. **Channel is not a substitute for a checker.** Putting “never emit X” in system still fails when X is only grep-detectable in the output — that check belongs in software [37][14].
+
+**LIKELY for skills:** put **non-overridable invariants** in the highest-privilege channel the **runtime** supports, **and** enforce them in code. Do not pile 20 markdown guardrails into SKILL.md (Monkey Island curve).
 
 **Techniques that demonstrably reduce superficial sensitivity** (direct or strongly analogous):
 
@@ -852,3 +871,22 @@ Narrow responsibility          # LIKELY (analogues [9][14][31]; Exp A)
 **Validated vs assumed:** syntax constraints, tool typing, external oracles, pass^k, context distractors, format sensitivity, negation failure, non-universal CoT — **validated in adjacent experiments**. SKILL.md split sizes, exact example counts, and Decision Surface as a numeric gate — **hypotheses** (A–H).
 
 The skill-authoring product to build is therefore **not a linter of adjectives**. It is a **reliability-engineering workbench**: contracts, schemas, scripts, exclusive triggers, Decision Surface lint, and a Skill Reliability Suite that refuses to certify 10/10 as 99%.
+
+---
+
+# Appendix: ten-question bar on the top-10 principles
+
+Applied to Part I. Not every cell has a SKILL.md RCT — that absence is the answer to Q8.
+
+| # | Principle | Q1 Evidence | Q2 Measured? | Q3 Models | Q4 Tasks | Q5 Effect | Q6 Trials | Q7 Reproduced? | Q8 Skills vs extra. | Q9 Contra | Q10 Conf. |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | Checkable work in code | [37][14][50][10] | yes | GPT-4/4o, τ-bench LMs, schema engines | JSON schema, retail/airline tools, 9.5k schemas, GSM8K | 40→93→100% schema; pass^8 collapse; 50→95% coverage; self-check −1.5 to −11 pp | provider eval; ≥3 τ-trials; 9.5k schemas | JSONSchemaBench + OpenAI agree on syntax≠coverage | extra. for SKILL.md; direct for agents/tools | Tam: JSON can hurt CoT if schema eats the scratchpad | **PROVEN** syntax; **LIKELY** as #1 skill lever |
+| 2 | Typed tools + tiny set | [14][31] | yes | gpt-4o, 3.5, Claude, open FC | τ-retail/airline; BFCL AST | FC > ReAct; 2.08 vs 0.46 bad IDs; multi-turn miss-func **6%** vs simple **77%** | ≥3 trials/task [14] | BFCL ongoing leaderboard | **direct** for tool skills | more tools can help *if* they are the right ones (BFCL parallel sometimes ↑) | **PROVEN** |
+| 3 | Constrain artifact not thought | [37][21][22] | yes | gpt-4o, 3.5, Llama 3.2-1B engines | schema eval; GSM8K last-letter; 10k schemas | 100% syntax; 100% answer-before-reason on one JSON-mode cell; GitHub-Hard coverage 3–41% | paper tables | dottxt rebuttal on Tam | extra. | JSONSchemaBench +3% quality on *their* tasks | **PROVEN** syntax; **LIKELY** scratchpad rule |
+| 4 | Shrink Decision Surface | [4][14][52] | yes | GPT-3, gpt-4o, GPT-4 | ICL classif.; τ-retail; MCQ | +30 pp calib.; ~25% wrong-decision; 13–75% option-order gap | ICML/τ/NAACL tables | Zhao+Pezeshkpour+τ agree on unconstrained choice = noise | extra. for SKILL tables | some tasks *need* residual judgment | **LIKELY**; Exp C |
+| 5 | Min context + disclosure | [1][8][40][54] | yes | GPT-3.5, Claude-1.3, Codex, GPT-5.x | NQ multi-doc; GSM-IC; τ-knowledge; Monkey Island | mid 53.8 vs first 75.8; ≤18% consistent; 25–37% pass^1 @195k tok; guardrails 1→20 → ~0 | paper n | 2410.14641: absolute LITM weaker on 2024+ models | extra. for SKILL.md files; **direct** for packing | omitting a **binding** policy −22.4 pp airline [14] | **PROVEN** extra-context harm; **LIKELY** disclosure |
+| 6 | One job + exclusive triggers | [9][14][31] | yes | GPT-4, PaLM 2 S, gpt-4o | IFEval prompt vs inst; τ compound writes; BFCL multiple | 43 vs 56% (PaLM 2 S); ~19% partial compound; irrelevance category | 541 IFEval prompts; 115 τ trajectories | no SKILL.md split RCT | extra. | over-split → routing miss (HYPOTHESIS) | **LIKELY**; Exp A |
+| 7 | Checkable contracts | [9][14] | yes | GPT-4, PaLM 2 S, gpt-4o | verifiable IF; unique DB outcome | 76.9% vs 43.1% prompt-strict; unique-outcome annotation required | 541; ≥3×115 | IFEval++ still uses checkers | extra. for markdown contracts; **direct** for eval design | subjective quality still needs humans/judges | **PROVEN** eval style |
+| 8 | pass^k + mutation | [14][44][7][23] | yes | gpt-4o, GPT-5, many | τ-retail; IFEval++; PromptBench; HumanEval MT | 61%→<25% pass^8; −18 to −62% reliable@10; 33–39% PDR; 75% error detect | k=8; reliable@10 | Brittlebench 2026 still finds surface variance | **direct** as eval standard | pass@k (HumanEval) is the **opposite** metric | **PROVEN** that pass^1 lies |
+| 9 | Positive path + mechanical ban | [19][47][9] | yes | GPT-3/InstructGPT; Llama-3.1; IFEval models | negation NLI; neg QA; forbidden-words | ~50 vs ~95% pos/neg; IFEval still *checks* negatives | paper tables | 2025 EMNLP: scale can help; still not 100% | extra. | IFEval negatives *are* followable when checked | **LIKELY** encoding |
+| 10 | No default plan/self-review; frozen examples | [13][10][3][5] | yes | 14 models; GPT-3.5/4; GPT-2/3 | 20 datasets + 100-paper meta; GSM8K; SST-2 | CoT +0.7 non-math; self-correct −1.5/−11; order 50↔85%; random labels 0–5% | meta + tables | τ-bench skipped planning independently | extra. for SKILL.md “always plan” | CoT **does** help math/symbolic +12–14 | **PROVEN** not-universal |
