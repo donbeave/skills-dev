@@ -27,7 +27,7 @@
 
 - Paper: https://arxiv.org/abs/2502.12197
 - Monkey Island: add 1–20 if-then guardrails to a real GPT Store system prompt. **All** tested API models (GPT-4o, 4o-mini, DeepSeek V3, o3-mini, R1) → pass rate **near 0** at 20 guardrails. Not adversarial; no tools; no long context.
-- GPT Store vs HuggingChat: GPT Store prompts average **5.1** guardrails.
+- GPT Store vs HuggingChat: **5.1** mean guardrails across **both** prompt collections used in the paper (Fig 3: Store denser than HuggingChat).
 - S-IFEval: moving IFEval constraints from **user** into **system** is **not** the same skill — transfer is incomplete; benefits from targeted training.
 - DPO on realistic system-adherence data helps more than stacking more markdown rules.
 - Double-check (feed response back to same model) **mixed**.

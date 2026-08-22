@@ -6,7 +6,7 @@
 - Setup: domain APIs + policy document + LM-simulated user. Reward = exact DB state × required outputs.
 - Metric **pass^k**: P(all k i.i.d. trials succeed). Distinct from pass@k (at least one of k).
 - gpt-4o function-calling: **~61%** pass^1 retail, **~35%** airline; **pass^8 < 25%** retail (~60% relative drop).
-- GitHub table (later checkpoints): Claude 3.5 Sonnet (20241022) retail pass^1 **0.692**, pass^4 **0.462**; airline pass^1 **0.460**, pass^4 **0.225**. gpt-4o retail **0.604 / 0.383**. Function calling **beats** ReAct/Act.
+- Paper Fig 3 (τ-**retail**): native FC beats ReAct and Act for SOTA models. gpt-4o FC retail pass^1 **61.2%**. GitHub later table: airline ReAct gpt-4o **0.325** is **airline**, not retail (retail ReAct listed `??`).
 - Policy ablation: removing policy, gpt-4o airline **33.2 → 10.8**; retail only **61.2 → 56.8**. gpt-3.5 barely uses airline policy (**10.8 → 9.6**).
 - Failure mix (36 gpt-4o retail fails): ~55% wrong argument/info (DB reasoning), ~25% wrong decision (rule following), ~19% partial compound requests.
 - Cost: **95.9%** of agent $ is input tokens (long policy + tool defs).
@@ -26,10 +26,11 @@
 ## Berkeley Function Calling Leaderboard (Yan / Patil et al.)
 
 - Categories: simple / multiple / parallel / parallel-multiple; AST vs execute; irrelevance.
-- GPT-4o-2024-11-20 (FC) overall **~65.8–84.4%** depending on slice; simple AST **77.2%**, parallel **93.0%**, parallel-multiple **86.0%**; **multi-turn** much worse (base **62.5**, miss-func **6.0** in one table).
+- GPT-4o-2024-11-20 (FC) overall **~65.8–84.4%** depending on slice; simple AST **77.2%**, multiple **93.5%**, parallel **93.0%**, parallel-multiple **86.0%**, relevance **78.8%**; **multi-turn** much worse (base **62.5**, miss-func **6.0** in one table).
 - Small specialized models (Qwen2.5-7B-FC **82.3%** overall) can beat larger general models on single-turn FC.
-- Irrelevance / abstain is a first-class failure mode.
-- Implication: **tool-choice entropy** is real. Multiple overlapping tools lower reliability. Restrict the tool set a skill may use (`allowed-tools`). Typed function calling > free JSON in a blob.
+- Irrelevance / abstain is a first-class failure mode (relevance **78.8%** ≠ 100%).
+- **miss-func 6.0%** is the multi-turn slice where the **needed** function is absent — it does **not** measure “too many tools”. Dropping the right tool from an allowlist would look like this.
+- Implication: restrict a skill to `allowed-tools` that still **contain** the needed calls. Typed function calling > free JSON in a blob. Do not cite miss-func as proof that smaller catalogs always win (on this snapshot multiple **>** simple).
 
 **Grade:** Strong empirical.
 

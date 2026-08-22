@@ -17,7 +17,7 @@ Numbered bibliography for [`REPORT.md`](REPORT.md). Measured results live in `so
 11. Tyen et al. (2024). *LLMs cannot find reasoning errors, but can correct them given the error location.* https://arxiv.org/abs/2311.08516
 12. Wang et al. (2023). *Self-Consistency Improves Chain of Thought Reasoning.* ICLR. https://arxiv.org/abs/2203.11171 — GSM8K +17.9 pp (PaLM-540B 56.5→74.4).
 13. Sprague et al. (2024/25). *To CoT or not to CoT?* ICLR 2025. https://arxiv.org/abs/2409.12183 — CoT +14.2 symbolic / +12.3 math / +6.9 logic / +0.7 other; 95% of MMLU CoT gain from math.
-14. Yao, Shinn, Razavi, Narasimhan (2024). *τ-bench.* https://arxiv.org/abs/2406.12045 — gpt-4o ~61% retail / ~35% airline; pass^8 <25% retail; FC > ReAct.
+14. Yao, Shinn, Razavi, Narasimhan (2024). *τ-bench.* https://arxiv.org/abs/2406.12045 — gpt-4o FC retail **61.2%** / airline ~35%; pass^8 <25% retail; Fig 3 **retail**: FC > ReAct/Act (do not mix GitHub airline ReAct 0.325 into retail).
 15. Yao et al. (2022/23). *ReAct.* https://arxiv.org/abs/2210.03629
 16. Yang et al. (2024). *SWE-agent: Agent-Computer Interfaces Enable Automated Software Engineering.* NeurIPS. Launch GPT-4 12.5% SWE-bench.
 17. Jimenez et al. (2023/24). *SWE-bench.* https://arxiv.org/abs/2310.06770
@@ -66,6 +66,6 @@ Numbered bibliography for [`REPORT.md`](REPORT.md). Measured results live in `so
 51. Clopper-Pearson / Wilson binomial intervals; “rule of three” (n failures=0 ⇒ ~3/n upper 95% on p_fail).
 52. Pezeshkpour & Hruschka (2024). *Large Language Models Sensitivity to The Order of Options in Multiple-Choice Questions.* NAACL Findings. https://arxiv.org/abs/2308.11483 — oracle reorder gap **~13–75%**; GPT-4 still ~13% at >90% acc; few-shot does not close.
 53. Zheng et al. (2023). *Judging LLM-as-a-Judge with MT-Bench and Chatbot Arena.* NeurIPS. https://arxiv.org/abs/2306.05685 — swap consistency Claude-v1 **23.8%**, GPT-3.5 **46.2%**, GPT-4 **65.0%** (30% first-bias).
-54. Mu et al. (2025). *A Closer Look at System Prompt Robustness.* https://arxiv.org/abs/2502.12197 — pass→0 as system guardrails 1→20; GPT Store prompts avg **5.1** guardrails; S-IFEval channel transfer is incomplete.
+54. Mu et al. (2025). *A Closer Look at System Prompt Robustness.* https://arxiv.org/abs/2502.12197 — pass→0 as system guardrails 1→20; **5.1** mean guardrails over GPT Store **and** HuggingChat corpus (Fig 3: Store > HuggingChat); S-IFEval channel transfer is incomplete.
 55. Wang et al. (2023). *Large Language Models are not Fair Evaluators.* https://arxiv.org/abs/2305.17926 — order of candidate answers biases LLM judges (adjacent to [53]).
 56. Li et al. (2024). *Measuring and Controlling Instruction (In)Stability in Language Model Dialogs.* Persona/instruction drift over turns.

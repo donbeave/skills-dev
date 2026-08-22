@@ -116,6 +116,20 @@ def verify_corpus(root: Path | None = None) -> dict[str, list[str]]:
         problems["matrix"].append("no OpenAI structured-output citation")
     if "10/10" not in report:
         problems["report"].append("missing 10/10 vs 99% discussion")
+    # Skeptic-barred misquotes must not reappear.
+    banned = [
+        "vs ReAct **32.5%",
+        "GPT Store avg **5.1**",
+        "GPT Store prompts average **5.1**",
+        "Real GPT Store prompts average **5.1**",
+        "GPT-store prompt already has **5.1**",
+    ]
+    blob = report + "\n" + matrix + "\n" + citations
+    for b in banned:
+        if b in blob:
+            problems["report"].append(f"banned misquote still present: {b}")
+    if "miss-func **6%" in report and "needed tool absent" not in report and "contra" not in report.lower():
+        problems["report"].append("miss-func 6% cited without absent-tool/contra qualification")
     if "arxiv.org" not in citations.lower() and "https://arxiv.org" not in citations:
         # CITATIONS uses https://arxiv.org in entries
         if "arxiv.org" not in citations:

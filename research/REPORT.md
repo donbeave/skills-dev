@@ -54,7 +54,7 @@ Zhao [4]: unconstrained label choice inherits majority/recency/common-token bias
 
 ### 1.5 Tool usage
 
-τ-bench: native function calling **>** ReAct/Act; wrong **arguments** dominate failures; weaker models hallucinate IDs (gpt-3.5 **2.08** bad IDs/task vs gpt-4o **0.46**) [14]. BFCL: parallel/multiple/multi-turn and **irrelevance** lag simple calls [31].
+τ-bench: native function calling **>** ReAct/Act on **τ-retail** (Fig 3); gpt-4o FC retail pass^1 **61.2%**; wrong **arguments** dominate failures; weaker models hallucinate IDs (gpt-3.5 **2.08** bad IDs/task vs gpt-4o **0.46**) [14]. BFCL: **irrelevance/relevance** and **multi-turn** lag (GPT-4o FC relevance **78.8%**, miss-func **6.0%** when the needed tool is absent); multiple/parallel AST can exceed simple on the same snapshot [31].
 
 **PROVEN** for tool agents: typed FC, fewer tools, validate args in the tool implementation (τ-bench APIs return `"Error: …"`).
 
@@ -142,7 +142,7 @@ Named axes from the research brief, with **measured** sources (not lore):
 | Option / choice **order** | Pezeshkpour & Hruschka [52] | Oracle reorder gap **~13–75%** (GPT-4 / InstructGPT, 5 MCQ sets). GPT-4 still **~13%** gap at **>90%** accuracy. Few-shot **does not** close the gap. Calibration/majority over 10 shuffles up to **+8 pp**. |
 | Pairwise **position** (A vs B) | Zheng et al. MT-Bench [53] | Swap consistency: Claude-v1 **23.8%** (75% first-bias); GPT-3.5 **46.2%**; GPT-4 **65.0%** (30% first-bias). GPT-4 few-shot → **77.5%**. |
 | Context **position** of gold info | Liu [1] | 20-doc GPT-3.5: **75.8%** first, **53.8%** mid (**below** 56.1% closed-book). |
-| Prompt **length** / many simultaneous rules | Mu et al. RealGuardrails [54] | Monkey Island: pass rate → **~0** as system guardrails go **1→20**. Real GPT Store prompts average **5.1** guardrails. |
+| Prompt **length** / many simultaneous rules | Mu et al. RealGuardrails [54] | Monkey Island: pass rate → **~0** as system guardrails go **1→20**. Mean **5.1** guardrails over GPT Store **and** HuggingChat prompts in their corpus (Fig 3: Store > HuggingChat). |
 | Irrelevant context | Shi [8] | **≤18%** of originally solvable items stay consistent across all distractor types; macro **<30%**. |
 | Surface perturbations on 2026 models | Brittlebench [43] | Up to **~12%** drop; **63%** of model **rankings** flip; up to **half** of variance from surface form. |
 | Negative vs positive wording | Truong [19]; 2026 negation [47] | Llama-3.1 **50.5%** neg vs **95.2%** pos. See §9. |
@@ -154,7 +154,7 @@ Named axes from the research brief, with **measured** sources (not lore):
 
 **System vs user (skill-relevant).** Skills are usually injected as **user-readable files** after metadata sat in the **system** list [38]. Two facts:
 
-1. **Privilege is trained, leaky.** Wallace [20] **PROVEN** that teaching system>user>tool raises robustness, not to 100%. Mu [54] **PROVEN** that stacking more system guardrails drives pass rate to zero even **without** adversarial user text. Average real GPT-store prompt already has **5.1** guardrails.
+1. **Privilege is trained, leaky.** Wallace [20] **PROVEN** that teaching system>user>tool raises robustness, not to 100%. Mu [54] **PROVEN** that stacking more system guardrails drives pass rate to zero even **without** adversarial user text. Their GPT Store **and** HuggingChat corpus averages **5.1** guardrails per prompt (Fig 3: Store denser than HuggingChat).
 2. **Channel is not a substitute for a checker.** Putting “never emit X” in system still fails when X is only grep-detectable in the output — that check belongs in software [37][14].
 
 **LIKELY for skills:** put **non-overridable invariants** in the highest-privilege channel the **runtime** supports, **and** enforce them in code. Do not pile 20 markdown guardrails into SKILL.md (Monkey Island curve).
@@ -881,7 +881,7 @@ Applied to Part I. Not every cell has a SKILL.md RCT — that absence is the ans
 | # | Principle | Q1 Evidence | Q2 Measured? | Q3 Models | Q4 Tasks | Q5 Effect | Q6 Trials | Q7 Reproduced? | Q8 Skills vs extra. | Q9 Contra | Q10 Conf. |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1 | Checkable work in code | [37][14][50][10] | yes | GPT-4/4o, τ-bench LMs, schema engines | JSON schema, retail/airline tools, 9.5k schemas, GSM8K | 40→93→100% schema; pass^8 collapse; 50→95% coverage; self-check −1.5 to −11 pp | provider eval; ≥3 τ-trials; 9.5k schemas | JSONSchemaBench + OpenAI agree on syntax≠coverage | extra. for SKILL.md; direct for agents/tools | Tam: JSON can hurt CoT if schema eats the scratchpad | **PROVEN** syntax; **LIKELY** as #1 skill lever |
-| 2 | Typed tools + tiny set | [14][31] | yes | gpt-4o, 3.5, Claude, open FC | τ-retail/airline; BFCL AST | FC > ReAct; 2.08 vs 0.46 bad IDs; multi-turn miss-func **6%** vs simple **77%** | ≥3 trials/task [14] | BFCL ongoing leaderboard | **direct** for tool skills | more tools can help *if* they are the right ones (BFCL parallel sometimes ↑) | **PROVEN** |
+| 2 | Typed tools + tiny set | [14][31] | yes | gpt-4o, 3.5, Claude, open FC | τ-retail Fig 3; BFCL | Fig 3 retail: FC > ReAct/Act; gpt-4o FC **61.2%**; gpt-3.5 **2.08** vs gpt-4o **0.46** bad IDs; BFCL relevance **78.8%** (choice/abstain entropy) | ≥3 trials/task [14] | BFCL ongoing leaderboard | **direct** for tool skills | **miss-func 6% vs simple 77%** (GPT-4o FC) is *needed tool absent* — contra to shrinking the set if the right tool is dropped; BFCL multiple can exceed simple | **PROVEN** FC; **LIKELY** allowlist-that-still-contains-the-tool |
 | 3 | Constrain artifact not thought | [37][21][22] | yes | gpt-4o, 3.5, Llama 3.2-1B engines | schema eval; GSM8K last-letter; 10k schemas | 100% syntax; 100% answer-before-reason on one JSON-mode cell; GitHub-Hard coverage 3–41% | paper tables | dottxt rebuttal on Tam | extra. | JSONSchemaBench +3% quality on *their* tasks | **PROVEN** syntax; **LIKELY** scratchpad rule |
 | 4 | Shrink Decision Surface | [4][14][52] | yes | GPT-3, gpt-4o, GPT-4 | ICL classif.; τ-retail; MCQ | +30 pp calib.; ~25% wrong-decision; 13–75% option-order gap | ICML/τ/NAACL tables | Zhao+Pezeshkpour+τ agree on unconstrained choice = noise | extra. for SKILL tables | some tasks *need* residual judgment | **LIKELY**; Exp C |
 | 5 | Min context + disclosure | [1][8][40][54] | yes | GPT-3.5, Claude-1.3, Codex, GPT-5.x | NQ multi-doc; GSM-IC; τ-knowledge; Monkey Island | mid 53.8 vs first 75.8; ≤18% consistent; 25–37% pass^1 @195k tok; guardrails 1→20 → ~0 | paper n | 2410.14641: absolute LITM weaker on 2024+ models | extra. for SKILL.md files; **direct** for packing | omitting a **binding** policy −22.4 pp airline [14] | **PROVEN** extra-context harm; **LIKELY** disclosure |
