@@ -26,11 +26,11 @@
 ## Berkeley Function Calling Leaderboard (Yan / Patil et al.)
 
 - Categories: simple / multiple / parallel / parallel-multiple; AST vs execute; irrelevance.
-- GPT-4o-2024-11-20 (FC) overall **~65.8–84.4%** depending on slice; simple AST **77.2%**, multiple **93.5%**, parallel **93.0%**, parallel-multiple **86.0%**, relevance **78.8%**; **multi-turn** much worse (base **62.5**, miss-func **6.0** in one table).
+- GPT-4o-2024-11-20 (FC) overall **~65.8–84.4%** depending on slice; simple AST **77.2%**, multiple **93.5%**, parallel **93.0%**, parallel-multiple **86.0%**. BFCL overall CSV 2025-04-25: **Live Acc 78.85%**, **Relevance Detection 83.33%**, **Irrelevance 81.31%**. Do **not** call 78.8% “relevance” — that cell is Live Acc / live-multiple in some tables. **multi-turn** much worse (base **62.5**, miss-func **6.0** in one table).
 - Small specialized models (Qwen2.5-7B-FC **82.3%** overall) can beat larger general models on single-turn FC.
-- Irrelevance / abstain is a first-class failure mode (relevance **78.8%** ≠ 100%).
+- Irrelevance / abstain is a first-class failure mode (**Irrelevance 81.31%**, **Relevance Detection 83.33%** ≠ 100%).
 - **miss-func 6.0%** is the multi-turn slice where the **needed** function is absent — it does **not** measure “too many tools”. Dropping the right tool from an allowlist would look like this.
-- Implication: restrict a skill to `allowed-tools` that still **contain** the needed calls. Typed function calling > free JSON in a blob. Do not cite miss-func as proof that smaller catalogs always win (on this snapshot multiple **>** simple).
+- Implication: restrict a skill to `allowed-tools` that still **contain** the needed calls. Typed function calling > free JSON in a blob. Do not cite miss-func as proof that smaller catalogs always win (on this snapshot multiple **>** simple). Do not cite Live Acc **78.85%** as relevance/irrelevance.
 
 **Grade:** Strong empirical.
 

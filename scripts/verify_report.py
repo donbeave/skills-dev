@@ -104,6 +104,10 @@ def verify_corpus(root: Path | None = None) -> dict[str, list[str]]:
     matrix = (root / "research" / "EVIDENCE-MATRIX.md").read_text(encoding="utf-8")
     experiments = (root / "research" / "EXPERIMENTS.md").read_text(encoding="utf-8")
     citations = (root / "research" / "CITATIONS.md").read_text(encoding="utf-8")
+    sources = ""
+    src_dir = root / "research" / "sources"
+    if src_dir.is_dir():
+        sources = "\n".join(p.read_text(encoding="utf-8") for p in sorted(src_dir.glob("*.md")))
     problems: dict[str, list[str]] = {
         "report": missing_substrings(report, REQUIRED_HEADINGS),
         "experiments": missing_substrings(experiments, EXPERIMENT_MARKERS),
@@ -123,8 +127,11 @@ def verify_corpus(root: Path | None = None) -> dict[str, list[str]]:
         "GPT Store prompts average **5.1**",
         "Real GPT Store prompts average **5.1**",
         "GPT-store prompt already has **5.1**",
+        "relevance **78.8%",
+        "GPT-4o FC relevance **78.8%",
+        "relevance 78.8%",
     ]
-    blob = report + "\n" + matrix + "\n" + citations
+    blob = report + "\n" + matrix + "\n" + citations + "\n" + sources
     for b in banned:
         if b in blob:
             problems["report"].append(f"banned misquote still present: {b}")

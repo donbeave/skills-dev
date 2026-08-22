@@ -34,7 +34,7 @@ Numbered bibliography for [`REPORT.md`](REPORT.md). Measured results live in `so
 28. Park et al. (2023). *Generative Agents.*
 29. Liu et al. (2023). *AgentBench.* https://arxiv.org/abs/2308.03688
 30. Schick et al. (2023). *Toolformer.*
-31. Yan et al. (2024). Berkeley Function Calling Leaderboard. https://gorilla.cs.berkeley.edu/blogs/8_berkeley_function_calling_leaderboard.html
+31. Yan et al. (2024). Berkeley Function Calling Leaderboard. https://gorilla.cs.berkeley.edu/blogs/8_berkeley_function_calling_leaderboard.html — GPT-4o-2024-11-20 (FC) overall CSV 2025-04-25: **Live Acc 78.85%**, **Relevance Detection 83.33%**, **Irrelevance 81.31%**. Live Acc ≠ relevance.
 32. Huang et al. (2023). *MetaTool.*
 33. Errica et al. (2024). *What Did I Do Wrong?* https://arxiv.org/abs/2406.12334
 34. Dentella et al. (2023). PNAS systematic LM testing — mean acc 0.572, 74.7% yes-bias.
