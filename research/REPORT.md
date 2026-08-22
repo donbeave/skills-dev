@@ -44,19 +44,19 @@ Sclar [2]: format-only changes, up to **76** accuracy points. Lu [3]: example or
 
 τ-bench [14]: same task, same tools, same policy, T=0 agent — **pass^8 <25%** after **~61%** pass^1 (gpt-4o retail). Traces vary enough to change DB writes. SWE-bench [16][17]: **scaffold** (allowed actions + tests) moves resolve rate by several points with the same model.
 
-**PROVEN** that free agent loops are unstable. **LIKELY** that an explicit procedure + reduced action set (ACI, Agentless-style pipeline) stabilizes path. **HYPOTHESIS** that numbered SKILL.md steps beat descriptive prose — Experiment B.
+**PROVEN** that repeated execution was unstable in the measured τ-bench tool-agent setting, which includes a stochastic user simulator. **LIKELY** that an explicit procedure + reduced action set stabilizes related agent paths. **HYPOTHESIS** that numbered SKILL.md steps beat descriptive prose — Experiment B.
 
 ### 1.4 Decision making
 
-Zhao [4]: unconstrained label choice inherits majority/recency/common-token bias (**+30 pp** when calibrated). τ-bench: **~25%** of inspected gpt-4o retail failures are **wrong decision type** (wrong tool family / policy) [14]. BFCL: choosing among tools is harder than filling a single known tool [31].
+Zhao [4]: unconstrained label choice inherits majority/recency/common-token bias (**+30 pp** when calibrated). τ-bench: **~25%** of inspected gpt-4o retail failures are **wrong decision type** (wrong tool family / policy) [14]. BFCL shows that tool selection and abstention remain imperfect, but its reported slices do not isolate tool-count effects [31].
 
 **LIKELY:** every unconstrained “use an appropriate method” is a noise source. Explicit conditions, enums, tables shrink the decision surface.
 
 ### 1.5 Tool usage
 
-τ-bench: native function calling **>** ReAct/Act on **τ-retail** (Fig 3); gpt-4o FC retail pass^1 **61.2%**; wrong **arguments** dominate failures; weaker models hallucinate IDs (gpt-3.5 **2.08** bad IDs/task vs gpt-4o **0.46**) [14]. BFCL GPT-4o-2024-11-20 (FC), 2025-04-25 CSV: **Relevance Detection 83.33%**, **Irrelevance 81.31%** (abstain/call choice, not 100%); **Live Acc 78.85%** is live weighted AST, not the relevance column; miss-func **6.0%** when the needed tool is absent; multiple/parallel AST can exceed simple on the same snapshot [31].
+τ-bench: native function calling **>** ReAct/Act on **τ-retail** (Fig 3); gpt-4o FC retail pass^1 **61.2%**; wrong **arguments** dominate failures [14]. BFCL GPT-4o-2024-11-20 (FC), 2025-04-25 CSV: **Relevance Detection 83.33%**, **Irrelevance 81.31%** (abstain/call choice, not 100%); **Live Acc 78.85%** is live weighted AST, not the relevance column; miss-func **6.0%** when the needed tool is absent; multiple/parallel AST can exceed simple on the same snapshot [31].
 
-**PROVEN** for tool agents: typed FC, fewer tools, validate args in the tool implementation (τ-bench APIs return `"Error: …"`).
+**PROVEN** for the measured τ-retail slice: native typed FC outperformed the compared text-action scaffolds. Tool-side argument validation is an engineering control used by the benchmark, not an isolated ablation. **LIKELY:** a complete, task-scoped allowlist avoids unrelated authority and choice; the cited BFCL snapshot does not prove that fewer tools alone improve success.
 
 ### 1.6 Output structure
 
@@ -109,15 +109,15 @@ These terms are **not** equivalent.
 | Dimension | Near-100% realistic? | How |
 | --- | --- | --- |
 | **Activation consistency** | High if descriptions disjoint and evald; not 100% | Classifier evals; exclusive triggers |
-| **Procedural consistency** | Medium; scaffolds help | Numbered path + fewer tools |
+| **Procedural consistency** | Medium; scaffolds help | Numbered path + task-scoped tools |
 | **Decision consistency** | High **if** decisions are tables/enums; low if “appropriate” | Shrink Decision Surface |
-| **Tool-call consistency** | High for name+required args with FC+validation; low for optional arg soup | Typed tools, server-side checks |
+| **Tool-call consistency** | Signature shape can be enforced; correct tool selection and invocation remain probabilistic | Typed tools, server-side checks |
 | **Output-schema consistency** | **Yes** on supported schemas | Constrained decoding + validator |
 | **Semantic-result consistency** | **No** in general | Oracles, pass^k, ensembles optional |
 | **Task-success consistency** | Domain-capped (τ-bench, SWE-bench) | Narrow the task until pass^k is acceptable |
 | **Failure-mode consistency** | High if fail-closed is code | Preconditions, tool errors, stop rules |
 
-**PROVEN** split: **syntax/schema/tool-signature** can be made nearly deterministic by **software**. **Meaning, ranking, and open generation** cannot. Skill engineering is the art of moving mass from the second set into the first.
+**PROVEN** split: **syntax/schema/signature conformance** can be made nearly deterministic by **software**. Correct tool selection, meaning, ranking, and open generation cannot. Skill engineering is the art of moving mass from the second set into the first.
 
 ---
 
@@ -224,7 +224,7 @@ Comparison of representations:
 | --- | --- | --- |
 | Goal only | Objective, not path | High variance (τ-bench without usable policy; Webson [6]) |
 | Goal + constraints | Outcome + bans | Constraints help if **checkable** [9]; bans fail if negation-only [19][47] |
-| Goal + explicit workflow | Path | Agentless-style pipelines match agents on SWE-Verified [OpenHands 53% vs Agentless 50.8%, same era] — **LIKELY** |
+| Goal + explicit workflow | Path | ACI and fixed-pipeline systems provide adjacent support, but no controlled SKILL.md comparison is cited — **HYPOTHESIS** |
 | State machine | Path + legal transitions | Software engines; **HYPOTHESIS** in SKILL.md; **PROVEN** useful when the machine is **code** (tools reject illegal transitions in τ-bench APIs) |
 | Decision tree / table | Branch choice | Zhao [4] analogue; **HYPOTHESIS** for skills (Exp C) |
 | Checklist | Completeness | IFEval multi-constraint: all-must-pass is the checklist metric [9] |
@@ -234,8 +234,8 @@ Comparison of representations:
 | Invariants | Always-true properties | Need mechanical checks or they are slogans |
 
 **Strongest reliability stack (synthesis, not a single paper):**  
-**contract + explicit procedure + decision table + examples per remaining branch + schema/script validators.**  
-Prose is for motivation only; if a sentence is not needed to execute, it is noise (Anthropic “onboarding guide” framing [38] is compatible but unmeasured).
+**contract + explicit procedure + decision table + examples only where they resolve ambiguity + schema/script validators.**
+Keep rationale only when it changes a branch choice, prevents misuse, or explains a required safety boundary (Anthropic “onboarding guide” framing [38] is compatible but unmeasured).
 
 ---
 
@@ -311,12 +311,12 @@ IFEval still includes “Forbidden Words” / “No Commas” as **verifiable** 
 - Ground-truth labels matter **less** than format/label-space/input distribution on classification ICL [5] (**0–5%** drop with random labels).
 - More shots do not kill format sensitivity [2].
 
-**LIKELY for skills:** examples are **executable behavioral specifications** (format, tool-arg shape, fail-closed shape), not documentation. Include:
+**LIKELY for skills:** examples can act as **executable behavioral specifications** (format, tool-arg shape, fail-closed shape), not decoration. Use an example only when it resolves demonstrated ambiguity. Candidate coverage includes:
 
 - one happy path,
 - one boundary,
 - one forbidden/fail-closed,
-- one example **per remaining unconstrained branch**.
+- material remaining model-controlled branches.
 
 **Diminishing returns:** no universal k. Literature shows 4-shot already saturates some classif. tasks **and** remains order-sensitive [3]. **HYPOTHESIS:** 3–5 **diverse branch** examples beat 10 near-duplicates (Experiment D). Over-similar examples can imprint spurious tokens (Min: models copy format).
 
@@ -386,7 +386,7 @@ See sources/04. Summary:
 
 No LLM paper isolates “repeat the invariant twice vs once” with a clean n. Adjacent: Sclar [2] (any wording change can move scores); Liu [1] (position matters, so one copy in the middle can be the *wrong* copy); maintenance cost of two slightly different MUSTs.
 
-**Our engineering inference:** **one authoritative statement**. Optionally a **verbatim** 1–5 line “Invariants” block at **end** (and/or start) for LITM, not a paraphrase. Never two paraphrases of the same MUST (contradiction risk + FormatSpread).
+**Our engineering inference:** **one authoritative statement**. Repeat a short invariant verbatim at an edge only when runtime evals prove a position-related failure and automated checks prevent drift. Never keep two paraphrases of the same MUST (contradiction risk + FormatSpread).
 
 ---
 
@@ -491,7 +491,7 @@ Specify contract
   → enumerate branches
   → reduce U (tables, enums, scripts)
   → implement deterministic components
-  → write SKILL.md (short procedure + examples per leftover branch)
+  → write SKILL.md (short procedure + only examples that resolve measured ambiguity)
   → write evals (including activation + mutation)
   → repeated trials (design n; run in a dedicated eval env — not this repo)
   → measure pass^k / variance
@@ -596,9 +596,9 @@ IFEval [9] **is** executable spec for surface constraints. τ-bench task JSON is
 | agentskills.io | <500 lines, <5k tokens, one-level refs | **Heuristic** [39] |
 | OpenAI Structured Outputs / FC / IH | Constrain tokens; typed tools; system>user>tool | **PROVEN** [37][14][20] |
 | Cursor/Copilot/Gemini rules | Piles of markdown | Risk of **conflict + distractors**; no public RCT |
-| SWE-agent ACI | Reduced edit DSL + tests | **PROVEN** scaffold effect [16] |
-| OpenHands / Agentless | Rich tools vs fixed pipeline | Pipeline ≈ agent on Verified in 2025 numbers — **procedure can replace freedom** |
-| MCP | Many tools | BFCL: **subset** tools per skill |
+| SWE-agent ACI | Reduced edit DSL + tests | **PROVEN** that this scaffold achieved its reported result; no isolated interface ablation [16] |
+| OpenHands / Agentless | Rich tools vs fixed pipeline | Useful architecture comparison; no controlled effect size is cited here — **HYPOTHESIS** for procedure replacing freedom |
+| MCP | Many tools | Use a complete task-scoped subset; BFCL does not isolate tool-count effects |
 | DSPy | Compile against metrics | **LIKELY** process analogue |
 
 **Do not adopt a vendor format as optimal.** Adopt the pieces that match measurements: disclosure, scripts, schemas, typed tools, evals.
@@ -650,7 +650,7 @@ Move every decidable check into **code/schema/tools**. Leave the model only the 
 ### Top 10 principles (ranked by expected impact)
 
 1. **Deterministic enforcement of anything checkable** — Strong empirical [37][14][50][10]. **PROVEN** (syntax/tools/tests), **LIKELY** as the #1 skill lever.  
-2. **Typed tools + tiny tool set + server-side arg checks** — Strong [14][31]. **PROVEN** for agents.  
+2. **Typed tools + complete task-scoped tool set + server-side checks** — Strong for FC/validation [14][31]. **PROVEN** on measured tool tasks; tool-subset benefit remains **LIKELY**.
 3. **Structured final artifacts (schema/grammar), unconstrained scratchpad** — Strong [37][21][22]. **PROVEN** syntax; **LIKELY** “don’t schema the CoT”.  
 4. **Shrink Decision Surface (tables, enums, else-stop)** — Moderate [4][14]. **LIKELY**; Exp C.  
 5. **Minimum sufficient context + progressive disclosure** — Strong [1][8][40]; vendor design [38]. **PROVEN** harm of extra context; **LIKELY** disclosure as the fix.  
@@ -690,7 +690,7 @@ description: >-                                # [38][39][31] activation classif
 <must exist; prefer a script that exits 1>     # [14] API errors; §13
 
 # Invariants
-<short list; repeated verbatim at end if long file>  # [1] position; §15
+<short canonical list>                         # [1] position; §15
 
 # Decision rules
 | Condition | Action | Else |
@@ -700,7 +700,7 @@ description: >-                                # [38][39][31] activation classif
 1. Run preconditions script.
 2. Select exactly one row of the table.
 3. Call named tools (no others).
-4. Validate output schema.
+4. Validate output schema and semantics required by the contract.
 5. Stop.                                      # §6 Agentless/ACI analogues
 
 # Tools
@@ -710,21 +710,21 @@ description: >-                                # [38][39][31] activation classif
 <JSON Schema / file path / enum>               # [37][22]
 
 # Validation
-<commands/checkers; retry once on schema fail> # [50][10]
+<commands/checkers; bounded retry policy for repairable failures> # [50][10]
 
 # Failure conditions
 <missing input / no table row / tool error → stop, do not improvise>  # [14][34]
 
 # Examples
-<one per table row + one fail-closed; order frozen>  # [3][5]
+<smallest set that resolves measured ambiguity; order frozen>  # [3][5]
 
-# Invariants (tail copy if body is long)
-<verbatim>
+# Optional tail invariant copy
+<verbatim; include only after a measured position failure>
 ```
 
 **Omitted on purpose:** “think step by step” (Sprague [13]); “review your answer” (Huang [10]); long rationale; extra references; personality.
 
-Scripts/schemas/evals sit **beside** this file, not inside it [38][13].
+Scripts/schemas/evals sit **beside** this file, not inside it [38][39].
 
 ---
 
@@ -742,7 +742,7 @@ Answer yes/no/NA. “Clear” is not a valid item.
 - [ ] Does a validator run **before** the skill may claim done?
 - [ ] Are file-existence / schema / grep checks in **scripts**, not only prose?
 - [ ] Is tool allowlist specified?
-- [ ] Are examples frozen and do they cover **each** branch + one failure?
+- [ ] Are examples justified and frozen, while evals cover **each** branch + one failure?
 - [ ] Is CoT/planning **absent** or **gated** on a named hard-task condition?
 - [ ] Is unaided self-review **absent** as a gate?
 - [ ] Are references loaded only from the taken branch, one level deep?
@@ -830,7 +830,7 @@ Score = sum. **Until calibrated, report the ten numbers, not the sum**, in any g
 2. List branches; **delete** branches by using software.
 3. Draft `description` with exclusive when/when-not.
 4. Draft body from Part III; no extra sections.
-5. Add examples last, one per leftover branch.
+5. Add examples last, using only the smallest set that resolves measured ambiguity; cover every branch in evals.
 6. Activation + happy + negative + mutation cases.
 7. Only then tune wording — and freeze format [2].
 
@@ -845,8 +845,8 @@ Score = sum. **Until calibrated, report the ten numbers, not the sum**, in any g
 
 1. Declare **no intended behavior change**.
 2. Mutation + regression must stay within CI of the pin.
-3. If you need new evals, it is an **update**.
-4. Split / merge / move-to-code / add validator / narrow trigger using the smell catalog.
+3. New characterization cases may preserve existing expectations; changing an expected outcome makes the work an **update**.
+4. Split / merge / move-to-code / add validators / narrow triggers only when frozen observable behavior stays unchanged; otherwise classify the work as an **update**.
 
 ---
 
@@ -881,7 +881,7 @@ Applied to Part I. Not every cell has a SKILL.md RCT — that absence is the ans
 | # | Principle | Q1 Evidence | Q2 Measured? | Q3 Models | Q4 Tasks | Q5 Effect | Q6 Trials | Q7 Reproduced? | Q8 Skills vs extra. | Q9 Contra | Q10 Conf. |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1 | Checkable work in code | [37][14][50][10] | yes | GPT-4/4o, τ-bench LMs, schema engines | JSON schema, retail/airline tools, 9.5k schemas, GSM8K | 40→93→100% schema; pass^8 collapse; 50→95% coverage; self-check −1.5 to −11 pp | provider eval; ≥3 τ-trials; 9.5k schemas | JSONSchemaBench + OpenAI agree on syntax≠coverage | extra. for SKILL.md; direct for agents/tools | Tam: JSON can hurt CoT if schema eats the scratchpad | **PROVEN** syntax; **LIKELY** as #1 skill lever |
-| 2 | Typed tools + tiny set | [14][31] | yes | gpt-4o, 3.5, Claude, open FC | τ-retail Fig 3; BFCL | Fig 3 retail: FC > ReAct/Act; gpt-4o FC **61.2%**; gpt-3.5 **2.08** vs gpt-4o **0.46** bad IDs; BFCL **Relevance Detection 83.33%** / **Irrelevance 81.31%** (CSV 2025-04-25; not Live Acc **78.85%**) | ≥3 trials/task [14] | BFCL ongoing leaderboard | **direct** for tool skills | **miss-func 6% vs simple 77%** (GPT-4o FC) is *needed tool absent* — contra to shrinking the set if the right tool is dropped; BFCL multiple can exceed simple | **PROVEN** FC; **LIKELY** allowlist-that-still-contains-the-tool |
+| 2 | Typed tools + task-scoped complete set | [14][31] | yes | gpt-4o, 3.5, Claude, open FC | τ-retail Fig 3; BFCL | Fig 3 retail: FC > ReAct/Act; gpt-4o FC **61.2%**; BFCL **Relevance Detection 83.33%** / **Irrelevance 81.31%** (CSV 2025-04-25; not Live Acc **78.85%**) | ≥3 trials/task [14] | BFCL ongoing leaderboard | **direct** for tool skills | **miss-func 6% vs simple 77%** (GPT-4o FC) is *needed tool absent*; BFCL multiple can exceed simple, so fewer-tools benefit is not isolated | **PROVEN** FC/validation; **LIKELY** task-scoped allowlist reliability benefit |
 | 3 | Constrain artifact not thought | [37][21][22] | yes | gpt-4o, 3.5, Llama 3.2-1B engines | schema eval; GSM8K last-letter; 10k schemas | 100% syntax; 100% answer-before-reason on one JSON-mode cell; GitHub-Hard coverage 3–41% | paper tables | dottxt rebuttal on Tam | extra. | JSONSchemaBench +3% quality on *their* tasks | **PROVEN** syntax; **LIKELY** scratchpad rule |
 | 4 | Shrink Decision Surface | [4][14][52] | yes | GPT-3, gpt-4o, GPT-4 | ICL classif.; τ-retail; MCQ | +30 pp calib.; ~25% wrong-decision; 13–75% option-order gap | ICML/τ/NAACL tables | Zhao+Pezeshkpour+τ agree on unconstrained choice = noise | extra. for SKILL tables | some tasks *need* residual judgment | **LIKELY**; Exp C |
 | 5 | Min context + disclosure | [1][8][40][54] | yes | GPT-3.5, Claude-1.3, Codex, GPT-5.x | NQ multi-doc; GSM-IC; τ-knowledge; Monkey Island | mid 53.8 vs first 75.8; ≤18% consistent; 25–37% pass^1 @195k tok; guardrails 1→20 → ~0 | paper n | 2410.14641: absolute LITM weaker on 2024+ models | extra. for SKILL.md files; **direct** for packing | omitting a **binding** policy −22.4 pp airline [14] | **PROVEN** extra-context harm; **LIKELY** disclosure |

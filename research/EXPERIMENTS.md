@@ -8,7 +8,7 @@ Shared defaults unless an experiment overrides them:
 | --- | --- |
 | Models | Frontier, mid, cheap (one each). Pin versions. |
 | Decoding | Primary: T=0. Secondary: T=0.7 for variance. |
-| n | 30 independent trials per cell for binary metrics (see REPORT §24). 100 for any “≥99%” claim. |
+| n | 30 independent trials per cell for binary metrics (see REPORT §24). Choose larger samples from the target reliability and confidence: roughly 300 zero-failure trials only begin to support a “≥99%” claim under the rule of three. |
 | Skills | Same task family (e.g. skill-audit of a fixture SKILL.md). |
 | Metrics | pass^1, pass^k (k=4,8), schema-valid %, procedure-trace match, tool-call exact-match, token-in, token-out, latency |
 | Stats | Wilson CI on proportions; mixed-effects logistic regression with model as factor; pre-register success criterion |

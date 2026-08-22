@@ -37,10 +37,9 @@
 ## SWE-bench / SWE-agent / OpenHands
 
 - SWE-agent (Yang et al., NeurIPS 2024): Agent-Computer Interface. GPT-4 **12.5%** full SWE-bench at launch; later Verified scores much higher with better models/scaffolds.
-- Same model, different scaffold: OpenHands vs SWE-agent vs Agentless differ by **several points** (e.g. Claude 3.5 Sonnet OpenHands **53%** Verified vs Agentless **50.8%** vs Tools Claude **49%**; unique solves per scaffold).
-- Historical Verified: 1.96% (2023) → ~12.5% (SWE-agent+GPT-4) → 53% (OpenHands+Sonnet 3.5) → 70–79% (2025 scaffolds+Opus 4.5).
+- OpenHands and Agentless demonstrate different scaffold shapes, but this corpus does not preserve a primary, controlled same-model comparison. Do not quote a cross-leaderboard delta as a scaffold effect.
 - SWE-Bench Pro (harder): Sonnet 4.5 **43.6%** public; private set much lower (Opus 4.1 **17.8%**).
-- Implication: **deterministic interface + tests** (ACI, unit tests as oracles) raise reliability more than prompt wording. Scaffold is a skill-runtime. Do not treat vendor scores as skill-authoring proof.
+- Implication: **deterministic interface + tests** (ACI, unit tests as oracles) are promising reliability controls. Scaffold is a skill-runtime. Measure the effect in the target harness; do not treat vendor scores as skill-authoring proof.
 
 **Grade:** Strong empirical for scaffolding/tests; **not** a SKILL.md ablation.
 

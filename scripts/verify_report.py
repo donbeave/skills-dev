@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import re
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -10,6 +11,7 @@ REPORT = REPO_ROOT / "research" / "REPORT.md"
 MATRIX = REPO_ROOT / "research" / "EVIDENCE-MATRIX.md"
 EXPERIMENTS = REPO_ROOT / "research" / "EXPERIMENTS.md"
 CITATIONS = REPO_ROOT / "research" / "CITATIONS.md"
+RECOMMENDATIONS = REPO_ROOT / "research" / "SKILL-DEVELOPMENT-RECOMMENDATIONS.md"
 
 REQUIRED_HEADINGS = [
     "# 1. Core research question",
@@ -93,9 +95,46 @@ EXPERIMENT_MARKERS = [
     "**Interpretation:**",
 ]
 
+RECOMMENDATION_MARKERS = [
+    "# Skill Development Recommendations",
+    "## Core rules: Always / Never",
+    "| # | Area | Always / Do | Never / Do Not |",
+    "## Conditional guidance",
+    "## Reliability metric definitions",
+    "## Definition of done",
+    "| 14 | Authority and trust |",
+    "`pass^k` / `reliable@k`",
+]
+
+RECOMMENDATION_SECTIONS = [
+    "## Core rules: Always / Never",
+    "## Conditional guidance",
+    "## Reliability metric definitions",
+    "## Definition of done",
+]
+
 
 def missing_substrings(text: str, needles: list[str]) -> list[str]:
     return [n for n in needles if n not in text]
+
+
+def verify_recommendations(text: str) -> list[str]:
+    problems = missing_substrings(text, RECOMMENDATION_MARKERS)
+    positions = [text.find(marker) for marker in RECOMMENDATION_SECTIONS]
+    if all(position >= 0 for position in positions) and positions != sorted(positions):
+        problems.append("recommendation sections are out of order")
+    core_rows = re.findall(r"^\| (\d+) \|", text, flags=re.MULTILINE)
+    if core_rows != [str(number) for number in range(1, 17)]:
+        problems.append("core rules must be numbered exactly 1 through 16")
+    for line in re.findall(r"^\| \d+ \|.*$", text, flags=re.MULTILINE):
+        cells = [cell.strip() for cell in line.strip("|").split("|")]
+        if len(cells) != 4 or not all(cells):
+            problems.append("each core rule must have four nonempty cells")
+            break
+        if "**Required:**" not in cells[2] or "Never" not in cells[3]:
+            problems.append("each core rule must contain paired Required and Never text")
+            break
+    return problems
 
 
 def verify_corpus(root: Path | None = None) -> dict[str, list[str]]:
@@ -104,6 +143,9 @@ def verify_corpus(root: Path | None = None) -> dict[str, list[str]]:
     matrix = (root / "research" / "EVIDENCE-MATRIX.md").read_text(encoding="utf-8")
     experiments = (root / "research" / "EXPERIMENTS.md").read_text(encoding="utf-8")
     citations = (root / "research" / "CITATIONS.md").read_text(encoding="utf-8")
+    recommendations = (
+        root / "research" / "SKILL-DEVELOPMENT-RECOMMENDATIONS.md"
+    ).read_text(encoding="utf-8")
     sources = ""
     src_dir = root / "research" / "sources"
     if src_dir.is_dir():
@@ -113,6 +155,8 @@ def verify_corpus(root: Path | None = None) -> dict[str, list[str]]:
         "experiments": missing_substrings(experiments, EXPERIMENT_MARKERS),
         "matrix": [],
         "citations": [],
+        "recommendations": verify_recommendations(recommendations),
+        "sources": [],
     }
     if "Measured effect" not in matrix:
         problems["matrix"].append("missing Measured effect column")
@@ -130,11 +174,21 @@ def verify_corpus(root: Path | None = None) -> dict[str, list[str]]:
         "relevance **78.8%",
         "GPT-4o FC relevance **78.8%",
         "relevance 78.8%",
+        "100 for any “≥99%” claim",
     ]
-    blob = report + "\n" + matrix + "\n" + citations + "\n" + sources
-    for b in banned:
-        if b in blob:
-            problems["report"].append(f"banned misquote still present: {b}")
+    documents = {
+        "report": report,
+        "matrix": matrix,
+        "citations": citations,
+        "recommendations": recommendations,
+        "sources": sources,
+    }
+    for section, document in documents.items():
+        for banned_text in banned:
+            if banned_text in document:
+                problems[section].append(
+                    f"banned misquote still present: {banned_text}"
+                )
     if "miss-func **6%" in report and "needed tool absent" not in report and "contra" not in report.lower():
         problems["report"].append("miss-func 6% cited without absent-tool/contra qualification")
     if "arxiv.org" not in citations.lower() and "https://arxiv.org" not in citations:

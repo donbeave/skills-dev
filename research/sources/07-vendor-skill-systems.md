@@ -36,14 +36,14 @@ Gaps: no published trigger-precision numbers; no split-vs-monolith experiment; �
 
 ## SWE-agent ACI vs OpenHands vs Agentless vs Devin-like
 
-- Scaffold differences of **3–10+ points** on SWE-bench Verified with the **same** model family.
+- Public systems use materially different scaffolds, but this corpus does not preserve a controlled same-model effect size.
 - ACI (constrained edit/view commands) is a **reduced decision surface**.
 - Agentless (fixed pipeline) sometimes matches agents — evidence that **explicit procedures** can replace free agent loops.
 
 ## MCP
 
-- Tools as APIs. BFCL: more tools → selection errors; irrelevance detection is hard.
-- Skills should **subset** tools (`allowed-tools`), not expose the whole MCP server.
+- Tools as APIs. BFCL shows that selection and abstention are imperfect, but its reported slices do not isolate tool-count effects.
+- Skills should expose a complete, task-scoped `allowed-tools` set: every required call, no unrelated authority. Treat the reliability benefit of fewer tools as a hypothesis; least authority remains a safety control.
 
 ## DSPy / Guidance / Outlines / LMQL / Instructor
 

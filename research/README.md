@@ -4,12 +4,13 @@ This directory holds the research product and the notes it was built from.
 
 ## Read first
 
-[`REPORT.md`](REPORT.md) is the deliverable. Everything else is supporting evidence.
+[`SKILL-DEVELOPMENT-RECOMMENDATIONS.md`](SKILL-DEVELOPMENT-RECOMMENDATIONS.md) is the short rules reference. [`REPORT.md`](REPORT.md) is the full research deliverable. Everything else is supporting evidence.
 
 ## File map
 
 | File | Role |
 | --- | --- |
+| `SKILL-DEVELOPMENT-RECOMMENDATIONS.md` | Standalone Always/Never rules and definition of done |
 | `GUIDELINE.md` | Short operator process for predictable skills |
 | `SPAWN-PROMPT.md` | Prompt to spawn a follow-on literature agent (no local evals) |
 | `REPORT.md` | Topics 1–33 + Parts I–VIII + closing architecture |

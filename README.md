@@ -6,6 +6,7 @@ Evidence-driven research on how to author, structure, test, evaluate, and mainta
 
 | Start here | Why |
 | --- | --- |
+| [`research/SKILL-DEVELOPMENT-RECOMMENDATIONS.md`](research/SKILL-DEVELOPMENT-RECOMMENDATIONS.md) | Simple rules: what to do and never do |
 | [`research/GUIDELINE.md`](research/GUIDELINE.md) | Operator process (create/update/refactor) |
 | [`research/REPORT.md`](research/REPORT.md) | Full argument, topics 1–33, Parts I–VIII |
 | [`research/SPAWN-PROMPT.md`](research/SPAWN-PROMPT.md) | Prompt to spawn a follow-on literature agent |
@@ -23,6 +24,7 @@ The goal is **not** to make LLMs deterministic. Inference is stochastic. The goa
 | Path | What |
 | --- | --- |
 | [`research/REPORT.md`](research/REPORT.md) | Full report: topics 1–33, Parts I–VIII, experiments A–H |
+| [`research/SKILL-DEVELOPMENT-RECOMMENDATIONS.md`](research/SKILL-DEVELOPMENT-RECOMMENDATIONS.md) | Standalone Always/Never reference and definition of done |
 | [`research/CITATIONS.md`](research/CITATIONS.md) | Bibliography with measured results |
 | [`research/EVIDENCE-MATRIX.md`](research/EVIDENCE-MATRIX.md) | Technique × evidence × measured effect |
 | [`research/EXPERIMENTS.md`](research/EXPERIMENTS.md) | Designed experiments A–H (protocol, not executed) |
